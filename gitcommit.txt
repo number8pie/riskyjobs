@@ -1,3 +1,4 @@
 #NEXT COMMIT MESSAGE:
 
 Changed search so that the search isnt so strict and it searches using the MySQL LIKE query.
+Oops. Pasted the wrong commit message for last commit.
