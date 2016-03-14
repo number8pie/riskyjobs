@@ -1,4 +1,3 @@
 #NEXT COMMIT MESSAGE:
 
-Changed search so that the search isnt so strict and it searches using the MySQL LIKE query.
-Oops. Pasted the wrong commit message for last commit.
+The search script now strips away commas and replaces them with spaces. Thses spaces are dropped from the script later on.
