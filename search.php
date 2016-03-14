@@ -12,8 +12,9 @@
   <h3>Risky Jobs - Search Results</h3>
 
 <?php
-  // Grab the sort setting from the URL using GET
+  // Grab the sort setting and search keywords from the URL using GET
   $sort = $_GET['sort'];
+  $user_search =  $_GET['usersearch'];
 
   // Start generating the table of results
   echo '<table border="0" cellpadding="2">';
@@ -27,36 +28,40 @@
   require_once('connectvars.php');
   $dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 
-  // Query to get the results
-  $search_query = "SELECT * FROM riskyjobs";
+  function build_query($user_search) {
+    $search_query = "SELECT * FROM riskyjobs";
 
-  // Extract the search keywords into an array
-  $user_search =  $_GET['usersearch'];
-  $clean_search = str_replace(',', ' ', $user_search);
-  $search_words = explode(' ', $clean_search);
+    // Extract the search keywords into an array
+    $clean_search = str_replace(',', ' ', $user_search);
+    $search_words = explode(' ', $clean_search);
 
-  $final_search_words = array();
-  if (count($search_words) > 0) {
-    foreach ($search_words as $word) {
-      if (!empty($word)) {
-        $final_search_words[] = $word;
+    $final_search_words = array();
+    if (count($search_words) > 0) {
+      foreach ($search_words as $word) {
+        if (!empty($word)) {
+          $final_search_words[] = $word;
+        }
       }
     }
-  }
 
-  // Generate a WHERE clause using all of the search keywords
-  $where_list = array();
-  if (count($final_search_words) > 0) {
-    foreach ($final_search_words as $word) {
-      $where_list[] = "description LIKE '%$word%'";
+    // Generate a WHERE clause using all of the search keywords
+    $where_list = array();
+    if (count($final_search_words) > 0) {
+      foreach ($final_search_words as $word) {
+        $where_list[] = "description LIKE '%$word%'";
+      }
     }
-  }
-  $where_clause = implode(' OR ', $where_list);
+    $where_clause = implode(' OR ', $where_list);
 
-  // Add the keyword WHERE clause to the search query
-  if (!empty($where_clause)) {
-    $search_query .= " WHERE $where_clause";
+    // Add the keyword WHERE clause to the search query
+    if (!empty($where_clause)) {
+      $search_query .= " WHERE $where_clause";
+    }
+
+    return $search_query;
   }
+
+  $search_query = build_query($user_search);
 
   $result = mysqli_query($dbc, $search_query);
   while ($row = mysqli_fetch_array($result)) {
