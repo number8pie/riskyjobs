@@ -105,10 +105,44 @@
     return $sort_links;
   }
 
+  // This function builds navigational page links based on the current page and the number of pages
+  function generate_page_links($user_search, $sort, $cur_page, $num_pages) {
+    $page_links = '';
+
+    // If this page is not the first page, generate the previous link
+    if ($cur_page > 1) {
+      $page_links .= ' <a href="' . $_SERVER['PHP_SELF'] . '?usersearch=' . $user_search . '&sort=' . $sort . '&page=' . ($cur_page - 1) . '"><-</a> ';
+    } else {
+      $page_links .= '<- ';
+    }
+
+    // Loop through the pages generating the page number links
+    for ($i = 1; $i <= $num_pages ; $i++) { 
+      if ($cur_page == 1) {
+        $page_links .= ' ' . $i;
+      } else {
+        $page_links .= ' <a href="' . $_SERVER['PHP_SELF'] . '?usersearch=' . $user_search . '&sort=' . $sort . '&page=' . $i . '"> ' . $i . '</a>';
+      }
+    }
+
+    // If this page is not the last page, generate the "next" link
+    if ($cur_page < $num_pages) {
+      $page_links .= ' <a href="' . $_SERVER['PHP_SELF'] . '?usersearch=' . $user_search . '&sort=' . $sort . '&page=' . ($cur_page + 1) . '">-></a> ';
+    } else {
+      $page_links .= ' ->';
+    }
+
+    return $page_links;
+  }
+
   // Grab the sort setting and search keywords from the URL using GET
-  //$sort = $_GET['sort'];
   $sort = isset($_GET['sort']) ? $_GET['sort'] : '';
   $user_search =  $_GET['usersearch'];
+
+  // Calculate pagination information
+  $cur_page = isset($_GET['page']) ? $_GET['page'] : 1;
+  $results_per_page = 5; // number of results per page
+  $skip = (($cur_page - 1) * $results_per_page);
 
   // Start generating the table of results
   echo '<table border="0" cellpadding="2">';
@@ -122,9 +156,15 @@
   require_once('connectvars.php');
   $dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 
-  $search_query = build_query($user_search, $sort);
+  // Query to get the total results
+  $query = build_query($user_search, $sort);
+  $result = mysqli_query($dbc, $query);
+  $total = mysqli_num_rows($result);
+  $num_pages = ceil($total / $results_per_page);
 
-  $result = mysqli_query($dbc, $search_query);
+  // Query again to get just the subset of results
+  $query = $query . " LIMIT $skip, $results_per_page";
+  $result = mysqli_query($dbc, $query);
   while ($row = mysqli_fetch_array($result)) {
     echo '<tr class="results">';
     echo '<td valign="top" width="20%">' . $row['title'] . '</td>';
@@ -134,6 +174,11 @@
     echo '</tr>';
   } 
   echo '</table>';
+
+  // Generate navigational page links if we have more than one page
+  if ($num_pages > 1) {
+    echo generate_page_links($user_search, $sort, $cur_page, $num_pages);
+  }
 
   mysqli_close($dbc);
 ?>

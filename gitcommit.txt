@@ -1,3 +1,4 @@
 #NEXT COMMIT MESSAGE:
 
-Fixed warning and notices when the script ran with the sort by switches.
+Added code to search .php to limit the results (current setting at time of writing is 5 results per page) for pagination.
+Added pagination to the search results if the $num_pages variable is more than 1.
