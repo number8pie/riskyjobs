@@ -1,4 +1,3 @@
 #NEXT COMMIT MESSAGE:
 
-Added code to search .php to limit the results (current setting at time of writing is 5 results per page) for pagination.
-Added pagination to the search results if the $num_pages variable is more than 1.
+Pagination page number link wasnt working, fixed.

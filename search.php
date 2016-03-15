@@ -118,7 +118,7 @@
 
     // Loop through the pages generating the page number links
     for ($i = 1; $i <= $num_pages ; $i++) { 
-      if ($cur_page == 1) {
+      if ($cur_page == $i) {
         $page_links .= ' ' . $i;
       } else {
         $page_links .= ' <a href="' . $_SERVER['PHP_SELF'] . '?usersearch=' . $user_search . '&sort=' . $sort . '&page=' . $i . '"> ' . $i . '</a>';
