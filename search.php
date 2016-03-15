@@ -106,7 +106,8 @@
   }
 
   // Grab the sort setting and search keywords from the URL using GET
-  $sort = $_GET['sort'];
+  //$sort = $_GET['sort'];
+  $sort = isset($_GET['sort']) ? $_GET['sort'] : '';
   $user_search =  $_GET['usersearch'];
 
   // Start generating the table of results
@@ -121,7 +122,7 @@
   require_once('connectvars.php');
   $dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 
-  $search_query = build_query($user_search);
+  $search_query = build_query($user_search, $sort);
 
   $result = mysqli_query($dbc, $search_query);
   while ($row = mysqli_fetch_array($result)) {

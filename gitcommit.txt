@@ -1,4 +1,3 @@
 #NEXT COMMIT MESSAGE:
 
-Added a switch to the build_query() function that will sort the results depending on what the $sort variable is set to via the url.
-Getting some notices that need to be fixed before continuing.
+Fixed warning and notices when the script ran with the sort by switches.
