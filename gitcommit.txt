@@ -1,3 +1,4 @@
 #NEXT COMMIT MESSAGE:
 
-Created a function that builds heading links on the specified sort setting, function uses a switch.
+Added a switch to the build_query() function that will sort the results depending on what the $sort variable is set to via the url.
+Getting some notices that need to be fixed before continuing.

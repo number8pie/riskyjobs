@@ -13,7 +13,7 @@
 
 <?php
   // This function builds a search query from the search keywords and sort setting
-  function build_query($user_search) {
+  function build_query($user_search, $sort) {
     $search_query = "SELECT * FROM riskyjobs";
 
     // Extract the search keywords into an array
@@ -40,6 +40,36 @@
     // Add the keyword WHERE clause to the search query
     if (!empty($where_clause)) {
       $search_query .= " WHERE $where_clause";
+    }
+
+    // Sort the search using the sort setting
+    switch ($sort) {
+      // Ascending by job titile
+      case 1:
+        $search_query .= " ORDER BY title";
+        break;
+      // Descending by job title
+      case 2:
+        $search_query .= " ORDER BY title DESC";
+        break;
+      // Ascending by state
+      case 3:
+        $search_query .= " ORDER BY state";
+        break;
+      // Descending by state
+      case 4:
+        $search_query .= " ORDER BY state DESC";
+        break;
+      // Ascending by date posted (oldest first)
+      case 5:
+        $search_query .= " ORDER BY date_posted";
+        break;
+      // Ascending by date posted (newest first)
+      case 6:
+        $search_query .= " ORDER BY date_posted DESC";
+        break;
+      default:
+        // No setting provided so don't sort
     }
 
     return $search_query;
@@ -71,7 +101,7 @@
         $sort_links .= '<td><a href="' . $_SERVER['PHP_SELF'] . '?usersearch=' . $user_search . '&sort=5">Date Posted</a></td>';
         break;
     }
-    
+
     return $sort_links;
   }
 
@@ -84,7 +114,7 @@
 
   // Generate the search result headings
   echo '<tr class="heading">';
-  //echo '<td>Job Title</td><td>Description</td><td>State</td><td>Date Posted</td>';
+  echo generate_sort_links($user_search, $sort);
   echo '</tr>';
 
   // Connect to the database
