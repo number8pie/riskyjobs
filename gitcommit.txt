@@ -1,3 +1,3 @@
 #NEXT COMMIT MESSAGE:
 
-Fixed a mis-typed value in the generate_sort_links() switch. Line 91 was "sort=3" and should have been "sort=5".
+Created registration.php with initial project code from chapter 10 project file.
