@@ -12,6 +12,8 @@
   <h3>Risky Jobs - Registration</h3>
 
 <?php
+  $regex_phone = "/^\(?[0]\d{4}\)?\s?\d{3}\s?\d{3}$/";
+
   if (isset($_POST['submit'])) {
     $first_name = $_POST['firstname'];
     $last_name = $_POST['lastname'];
@@ -39,11 +41,19 @@
       $output_form = 'yes';
     }
 
-    if (empty($phone)) {
-      // $phone is blank
-      echo '<p class="error">You forgot to enter your phone number.</p>';
+    if (preg_match($regex_phone, $phone)) {
+      $phone_clean = preg_replace('/[\(\)\s]/', '', $phone);
+      echo '<br /><p class="error">Your phone number has been stored as ' . $phone_clean . '.</p><br />';
+    } else {
+      // $phone is invalid
+      echo '<p class="error">You entered an invalid phone number.</p>';
       $output_form = 'yes';
     }
+    // if (!preg_match($regex_phone, $phone)) {
+    //   // $phone is invalid
+    //   echo '<p class="error">You entered an invalid phone number.</p>';
+    //   $output_form = 'yes';
+    // }
 
     if (empty($job)) {
       // $job is blank
@@ -69,24 +79,24 @@
   <table>
     <tr>
       <td><label for="firstname">First Name:</label></td>
-      <td><input id="firstname" name="firstname" type="text" value="<?php echo $first_name; ?>"/></td></tr>
+      <td><input id="firstname" name="firstname" type="text" <?php if (isset($first_name)) {echo "value='$first_name'";} ?>/></td></tr>
     <tr>
       <td><label for="lastname">Last Name:</label></td>
-      <td><input id="lastname" name="lastname" type="text" value="<?php echo $last_name; ?>"/></td></tr>
+      <td><input id="lastname" name="lastname" type="text" <?php if (isset($last_name)) {echo "value='$last_name'";} ?>/></td></tr>
     <tr>
       <td><label for="email">Email:</label></td>
-      <td><input id="email" name="email" type="text" value="<?php echo $email; ?>"/></td></tr>
+      <td><input id="email" name="email" type="text" <?php if (isset($email)) {echo "value='$email'";} ?>/></td></tr>
     <tr>
       <td><label for="phone">Phone:</label></td>
-      <td><input id="phone" name="phone" type="text" value="<?php echo $phone; ?>"/></td></tr>
+      <td><input id="phone" name="phone" type="text" <?php if (isset($phone)) {echo "value='$phone'";} ?>/></td></tr>
     <tr>
       <td><label for="job">Desired Job:</label></td>
-      <td><input id="job" name="job" type="text" value="<?php echo $job; ?>"/></td>
+      <td><input id="job" name="job" type="text" <?php if (isset($job)) {echo "value='$job'";} ?>/></td>
   </tr>
   </table>
   <p>
     <label for="resume">Paste your resume here:</label><br />
-    <textarea id="resume" name="resume" rows="4" cols="40"><?php echo $resume; ?></textarea><br />
+    <textarea id="resume" name="resume" rows="4" cols="40"><?php if (isset($resume)) {echo $resume;} ?></textarea><br />
     <input type="submit" name="submit" value="Submit" />
   </p>
 </form>
