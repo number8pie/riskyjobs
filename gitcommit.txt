@@ -1,5 +1,3 @@
 #NEXT COMMIT MESSAGE:
 
-Added a preg_match statement (line 44) to check the format the phone number has been entered.
-This uses an if else statement to echo an error and show the form if it's not valid, if it is valid it uses preg_replace to replace parenthesis or spaces with an empty string, (so the number canbe passed to the MySQLquery as a string of just numbers) and then echoes out the number without spaces or parenthesis to the page, just to check it's doing it right.
-On line 52 below it is the statement without the preg_replace and echo to check it's right, I assume the preg_replace would be done just before the query is constructed.
+Added form validation to the email field, now checks that the part before the @ is valid and also if the domain given after the @ is valid.

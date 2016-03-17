@@ -13,6 +13,8 @@
 
 <?php
   $regex_phone = "/^\(?[0]\d{4}\)?\s?\d{3}\s?\d{3}$/";
+  $regex_email = "/^[a-zA-Z0-9][a-zA-Z0-9\._\-&!?=#]*@/";
+  $regex_domain = "/^[a-zA-Z0-9][a-zA-Z0-9\._\-&!?=#]*@/";
 
   if (isset($_POST['submit'])) {
     $first_name = $_POST['firstname'];
@@ -35,15 +37,29 @@
       $output_form = 'yes';
     }
 
-    if (empty($email)) {
-      // $email is blank
-      echo '<p class="error">You forgot to enter your email address.</p>';
+    if (!preg_match($regex_email, $email)) {
+      // Email is invalid because LocalName is bad
+      echo 'Your email address is invalid.<br />';
       $output_form = 'yes';
+    } else {
+      // Strip out everything but the domain from the email
+      $domain = preg_replace($regex_domain, '', $email);
+      // Now check if the domain is registered
+      if (!checkdnsrr($domain)) {
+        echo 'Your email address is invalid.<br />';
+        $output_form = 'yes';
+      }
     }
+
+    // if (empty($email)) {
+    //   // $email is blank
+    //   echo '<p class="error">You forgot to enter your email address.</p>';
+    //   $output_form = 'yes';
+    // }
 
     if (preg_match($regex_phone, $phone)) {
       $phone_clean = preg_replace('/[\(\)\s]/', '', $phone);
-      echo '<br /><p class="error">Your phone number has been stored as ' . $phone_clean . '.</p><br />';
+      echo '<p class="error">Your phone number has been stored as ' . $phone_clean . '.</p>';
     } else {
       // $phone is invalid
       echo '<p class="error">You entered an invalid phone number.</p>';
@@ -66,8 +82,7 @@
       echo '<p class="error">You forgot to enter your resume.</p>';
       $output_form = 'yes';
     }
-  }
-  else {
+  }  else {
     $output_form = 'yes';
   }
 
